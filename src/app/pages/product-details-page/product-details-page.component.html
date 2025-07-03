@@ -19,7 +19,7 @@
     </svg>
     Back to Inventory
   </button>
-
+  <h1 class="text-3xl font-extrabold text-gray-800 mb-6">Product Details</h1>
   <ng-container *ngIf="product() as product; else notFound">
     <div class="bg-white p-8 rounded-2xl shadow-xl">
       <h2 class="text-4xl font-extrabold text-gray-800 mb-3 leading-tight">
@@ -90,6 +90,18 @@
               </th>
               <td class="py-3 px-4 text-base capitalize">
                 {{ product.category }}
+              </td>
+            </tr>
+            <tr
+              class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+            >
+              <th
+                class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+              >
+                Location
+              </th>
+              <td class="py-3 px-4 text-base capitalize">
+                {{ product.location }}
               </td>
             </tr>
           </tbody>

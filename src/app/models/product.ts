@@ -6,4 +6,11 @@ export interface Product {
   quantity: number;
   price: number;
   category: string;
+  location: string;
+}
+
+export interface ProductResponse {
+  data: Product[],
+  page: number,
+  total: number
 }

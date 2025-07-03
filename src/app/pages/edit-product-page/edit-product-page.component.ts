@@ -29,37 +29,42 @@ export class EditProductPageComponent {
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.productId = id;
-    const product = this.productService.getProductById(id);
-    if (!product) {
-      this.productFound = false;
-      return;
-    }
+    this.productService.getProductById(id).subscribe((product) => {
+      if (!product) {
+        this.productFound = false;
+        return;
+      }
 
-    this.productForm = new FormGroup({
-      name: new FormControl(product.name, [
-        Validators.required,
-        Validators.minLength(3),
-      ]),
-      sku: new FormControl(product.sku, [
-        Validators.required,
-        Validators.pattern(/^[a-zA-Z0-9-_]+$/),
-      ]),
-      quantity: new FormControl(product.quantity, [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      price: new FormControl(product.price, [
-        Validators.required,
-        Validators.min(0),
-      ]),
-      category: new FormControl(product.category, [
-        Validators.required,
-        Validators.minLength(3),
-      ]),
-      description: new FormControl(product.description, [
-        Validators.required,
-        Validators.minLength(10),
-      ]),
+      this.productForm = new FormGroup({
+        name: new FormControl(product.name, [
+          Validators.required,
+          Validators.minLength(3),
+        ]),
+        sku: new FormControl(product.sku, [
+          Validators.required,
+          Validators.pattern(/^[a-zA-Z0-9-_]+$/),
+        ]),
+        quantity: new FormControl(product.quantity, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+        price: new FormControl(product.price, [
+          Validators.required,
+          Validators.min(0),
+        ]),
+        category: new FormControl(product.category, [
+          Validators.required,
+          Validators.minLength(3),
+        ]),
+        description: new FormControl(product.description, [
+          Validators.required,
+          Validators.minLength(10),
+        ]),
+        location: new FormControl(product.location, [
+          Validators.required,
+          Validators.minLength(2),
+        ]),
+      });
     });
   }
 
@@ -81,15 +86,24 @@ export class EditProductPageComponent {
   get description() {
     return this.productForm.get('description')!;
   }
+  get location() {
+    return this.productForm.get('location')!;
+  }
 
   onSubmit() {
     if (this.productForm.valid) {
-      this.productService.updateProduct({
-        id: this.productId,
-        ...this.productForm.value,
-      });
-      alert('Product updated successfully!');
-      this.router.navigate(['/product', this.productId]);
+      this.productService
+        .updateProduct(this.productId, this.productForm.value)
+        .subscribe({
+          next: () => {
+            alert('Product updated successfully!');
+            this.router.navigate(['/product', this.productId]);
+          },
+          error: (err) => {
+            console.error('Failed to update product', err);
+            alert('Failed to update product');
+          },
+        });
     }
   }
 

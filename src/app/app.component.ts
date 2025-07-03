@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavComponent } from './shared/nav.component';
+import { NavComponent } from './shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NavComponent],
-  template: `
-    <div class="bg-gray-200 min-h-screen">
-      <app-nav></app-nav>
-      <router-outlet></router-outlet>
-    </div>
-  `,
+  templateUrl: './app.component.html',
 })
 export class AppComponent {}

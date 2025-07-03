@@ -1,65 +1,55 @@
 import { Injectable, signal, computed } from '@angular/core';
-import type { Product } from '../models/product';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Product, ProductResponse } from '../models/product';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
-  private _products = signal<Product[]>([
-    {
-      id: 1,
-      name: 'Laptop Pro',
-      sku: 'LP-001',
-      description: 'High performance professional laptop.',
-      quantity: 10,
-      price: 1200,
-      category: 'Electronics'
-    },
-    {
-      id: 2,
-      name: 'Wireless Mouse',
-      sku: 'WM-004',
-      description: 'Ergonomic wireless mouse.',
-      quantity: 25,
-      price: 25,
-      category: 'Electronics'
-    },
-    {
-      id: 3,
-      name: 'Office Chair',
-      sku: 'OC-016',
-      description: 'Comfortable office chair with adjustable height.',
-      quantity: 5,
-      price: 150,
-      category: 'Furniture'
-    },
-  ]);
-  
-  readonly products = this._products.asReadonly();
+  private apiUrl = `${environment.apiUrl}/products`;
+  private _products = signal<ProductResponse>({ data: [], page: 1, total: 0 });
 
-  private _nextId = 4;
+  products = this._products;
+
+  categories = computed(() => {
+    const products = this._products();
+    if (!Array.isArray(products.data)) return [];
+
+    const categories = products.data.map((p) => p.category);
+    return Array.from(new Set(categories));
+  });
+
+  constructor(private http: HttpClient) {
+    this.loadProductsByPage();
+  }
+
+  loadProductsByPage(page: number = 1, limit: number = 12) {
+    this.http
+      .get<ProductResponse>(`${this.apiUrl}?page=${page}&limit=${limit}`)
+      .subscribe({
+        next: (data) => this._products.set(data),
+        error: (err) => console.error('Failed to load products', err),
+      });
+  }
 
   getProductById(id: number) {
-    return this._products().find(p => p.id === id);
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 
-  addProduct(product: Omit<Product, 'id'>) {
-    const newProduct: Product = { id: this._nextId++, ...product };
-    this._products.update(products => [...products, newProduct]);
+  createProduct(product: Product) {
+    return this.http.post<Product>(this.apiUrl, product);
   }
 
-  updateProduct(updatedProduct: Product) {
-    this._products.update(products =>
-      products.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
-    );
+  updateProduct(id: number, product: Product) {
+    console.log('Updating product with ID:', id, 'Data:', product);
+    return this.http.put<Product>(`${this.apiUrl}/${id}`, product);
   }
 
   deleteProduct(id: number) {
-    this._products.update(products => products.filter(p => p.id !== id));
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  get categories() {
-    const categories = this._products().map(p => p.category);
-    return Array.from(new Set(categories));
-  }
+  currentPage = computed(() => this._products().page);
+  totalPages = computed(() => Math.ceil(this._products().total / 12));
 }

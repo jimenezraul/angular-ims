@@ -1,0 +1,28 @@
+<nav
+  class="bg-blue-600 p-4 flex flex-wrap items-center justify-between text-white"
+>
+  <div class="container mx-auto flex items-center justify-between">
+    <div class="font-bold text-xl">Inventory Management</div>
+    <div class="space-x-4">
+      <a
+        [routerLink]="['']"
+        routerLinkActive="underline"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:underline"
+        >Home</a
+      >
+      <a
+        [routerLink]="['/inventory']"
+        routerLinkActive="underline"
+        class="hover:underline"
+        >Inventory</a
+      >
+      <a
+        [routerLink]="['/add-product']"
+        routerLinkActive="underline"
+        class="hover:underline"
+        >Add Product</a
+      >
+    </div>
+  </div>
+</nav>

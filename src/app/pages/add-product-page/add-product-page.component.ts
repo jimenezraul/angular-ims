@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   templateUrl: './add-product-page.component.html',
 })
 export class AddProductPageComponent {
-productForm!: FormGroup;
+  productForm!: FormGroup;
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -38,6 +38,10 @@ productForm!: FormGroup;
         Validators.required,
         Validators.minLength(10),
       ]),
+      location: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+      ]), // ✅ add location
     });
   }
 
@@ -59,12 +63,22 @@ productForm!: FormGroup;
   get description() {
     return this.productForm.get('description')!;
   }
+  get location() {
+    return this.productForm.get('location')!;
+  }
 
   onSubmit() {
     if (this.productForm.valid) {
-      this.productService.addProduct(this.productForm.value);
-      alert('Product added successfully!');
-      this.router.navigate(['/inventory']);
+      this.productService.createProduct(this.productForm.value).subscribe({
+        next: () => {
+          alert('Product added successfully!');
+          this.router.navigate(['/inventory']);
+        },
+        error: (err) => {
+          console.error('Failed to add product', err);
+          alert('Failed to add product');
+        },
+      });
     }
   }
 }
