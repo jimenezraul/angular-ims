@@ -1,9 +1,10 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
-import { ProductDto } from '../../models/product';
+import { Product, ProductDto } from '../../models/product';
 import { CategoryService } from '../../services/categories.service';
+import { Category } from '../../models/category';
 
 @Component({
   selector: 'app-product-details-page',
@@ -11,31 +12,44 @@ import { CategoryService } from '../../services/categories.service';
   imports: [CommonModule, RouterLink],
   templateUrl: './product-details-page.component.html',
 })
-export class ProductDetailsPageComponent {
-  product = signal<ProductDto | null>(null);
+export class ProductDetailsPageComponent implements OnInit {
+  product = signal<Product | null>(null);
+  category = signal<Category | null>(null);
+  loading = signal(true);
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     private categoryService: CategoryService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
+
     this.productService.getProductById(id).subscribe({
       next: (prod) => {
-        const categories = this.categoryService.categories().data || [];
-        const category = categories.find((c) => c.id === prod.categoryId);
-
-        const productWithCategory = {
-          ...prod,
-          categoryName: category?.name || 'Unknown',
-        };
-
-        this.product.set(productWithCategory);
+        this.product.set(prod);
+        this.loading.set(false);
       },
-      error: () => this.product.set(null),
+      error: () => {
+        this.product.set(null);
+        this.loading.set(false);
+      },
     });
+
+    this.categoryService.loadCategories();
   }
+
+  effect = effect(() => {
+    const prod = this.product();
+    const categories = this.categoryService.categories().data;
+
+    if (prod && categories.length > 0) {
+      const foundCategory = categories.find((c) => c.id === prod.categoryId);
+      this.category.set(foundCategory || null);
+    }
+  });
 
   getStockStatus(quantity: number | undefined | null) {
     if (quantity === undefined || quantity === null || quantity < 0) {

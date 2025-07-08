@@ -20,139 +20,171 @@
     Back to Inventory
   </button>
   <h1 class="text-3xl font-extrabold text-gray-800 mb-6">Product Details</h1>
-  <ng-container *ngIf="product() as product; else notFound">
-    <div class="bg-white p-8 rounded-2xl shadow-xl">
-      <h2 class="text-4xl font-extrabold text-gray-800 mb-3 leading-tight">
-        {{ product.name }}
-      </h2>
-      <p class="mb-8 text-gray-600 text-lg leading-relaxed">
-        {{ product.description }}
-      </p>
 
-      <div class="overflow-x-auto mb-8">
-        <table
-          class="w-full text-left text-gray-700 rounded-xl overflow-hidden"
-        >
-          <tbody class="divide-y divide-gray-200">
-            <tr
-              class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
-            >
-              <th
-                class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
-              >
-                SKU
-              </th>
-              <td class="py-3 px-4 text-base font-medium">
-                {{ product.sku }}
-              </td>
-            </tr>
-            <tr
-              class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
-            >
-              <th
-                class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
-              >
-                Quantity
-              </th>
-              <td class="py-3 px-4 text-base">
-                <span
-                  class="font-bold"
-                  [ngClass]="getStockStatus(product.quantity).class"
-                  >{{ product.quantity }}</span
-                >
-                <span
-                  [ngClass]="getStockStatus(product.quantity).class"
-                  class="ml-2 text-xs"
-                >
-                  {{ getStockStatus(product.quantity).text }}
-                </span>
-              </td>
-            </tr>
-            <tr
-              class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
-            >
-              <th
-                class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
-              >
-                Price
-              </th>
-              <td class="py-3 px-4 text-base font-medium text-green-700">
-                ${{ product.price | number : "1.2-2" }}
-              </td>
-            </tr>
-            <tr
-              class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
-            >
-              <th
-                class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
-              >
-                Category
-              </th>
-              <td class="py-3 px-4 text-base capitalize">
-                {{ product.categoryName }}
-              </td>
-            </tr>
-            <tr
-              class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
-            >
-              <th
-                class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
-              >
-                Location
-              </th>
-              <td class="py-3 px-4 text-base capitalize">
-                {{ product.location }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="flex gap-4 sm:justify-end mt-8">
-        <a
-          [routerLink]="['/edit-product', product.id]"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 ease-in-out"
-        >
-          <svg
-            class="mr-2 h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-            ></path>
-          </svg>
-          Edit Product
-        </a>
-        <button
-          (click)="deleteProduct()"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ease-in-out"
-        >
-          <svg
-            class="mr-2 h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            ></path>
-          </svg>
-          Delete
-        </button>
-      </div>
+  <!-- Show loading while loading -->
+  <ng-container *ngIf="loading(); else loadedContent">
+    <div class="text-center py-12">
+      <svg
+        class="animate-spin h-8 w-8 text-blue-600 mx-auto mb-4"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v8H4z"
+        ></path>
+      </svg>
+      <p class="text-gray-600">Loading product details...</p>
     </div>
   </ng-container>
 
+  <!-- When loading finished, show product or notFound -->
+  <ng-template #loadedContent>
+    <ng-container *ngIf="product() as product; else notFound">
+      <div class="bg-white p-8 rounded-2xl shadow-xl">
+        <h2 class="text-4xl font-extrabold text-gray-800 mb-3 leading-tight">
+          {{ product.name }}
+        </h2>
+        <p class="mb-8 text-gray-600 text-lg leading-relaxed">
+          {{ product.description }}
+        </p>
+
+        <div class="overflow-x-auto mb-8">
+          <table
+            class="w-full text-left text-gray-700 rounded-xl overflow-hidden"
+          >
+            <tbody class="divide-y divide-gray-200">
+              <tr
+                class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+              >
+                <th
+                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                >
+                  SKU
+                </th>
+                <td class="py-3 px-4 text-base font-medium">
+                  {{ product.sku }}
+                </td>
+              </tr>
+              <tr
+                class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+              >
+                <th
+                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                >
+                  Quantity
+                </th>
+                <td class="py-3 px-4 text-base">
+                  <span
+                    class="font-bold"
+                    [ngClass]="getStockStatus(product.quantity).class"
+                    >{{ product.quantity }}</span
+                  >
+                  <span
+                    [ngClass]="getStockStatus(product.quantity).class"
+                    class="ml-2 text-xs"
+                  >
+                    {{ getStockStatus(product.quantity).text }}
+                  </span>
+                </td>
+              </tr>
+              <tr
+                class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+              >
+                <th
+                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                >
+                  Price
+                </th>
+                <td class="py-3 px-4 text-base font-medium text-green-700">
+                  ${{ product.price | number : "1.2-2" }}
+                </td>
+              </tr>
+              <tr
+                class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+              >
+                <th
+                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                >
+                  Category
+                </th>
+                <td class="py-3 px-4 text-base capitalize">
+                  {{ category()?.name || "Unknown" }}
+                </td>
+              </tr>
+              <tr
+                class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+              >
+                <th
+                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                >
+                  Location
+                </th>
+                <td class="py-3 px-4 text-base capitalize">
+                  {{ product.location }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex gap-4 sm:justify-end mt-8">
+          <a
+            [routerLink]="['/edit-product', product.id]"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors duration-200 ease-in-out"
+          >
+            <svg
+              class="mr-2 h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              ></path>
+            </svg>
+            Edit Product
+          </a>
+          <button
+            (click)="deleteProduct()"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200 ease-in-out"
+          >
+            <svg
+              class="mr-2 h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              ></path>
+            </svg>
+            Delete
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <!-- Not found template -->
   <ng-template #notFound>
     <div class="bg-white p-8 rounded-2xl shadow-xl text-center">
       <p class="text-gray-600 text-xl font-medium mb-4">Product not found.</p>

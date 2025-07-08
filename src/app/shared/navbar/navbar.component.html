@@ -1,9 +1,31 @@
-<nav
-  class="bg-blue-600 p-4 flex flex-wrap items-center justify-between text-white"
->
-  <div class="container mx-auto flex items-center justify-between">
+<nav class="bg-blue-600 p-4 text-white">
+  <div class="container mx-auto flex items-center justify-between flex-wrap">
+    <!-- Logo -->
     <div class="font-bold text-xl">Inventory Management</div>
-    <div class="space-x-4">
+
+    <!-- Hamburger Button -->
+    <button
+      class="md:hidden block focus:outline-none"
+      (click)="isMenuOpen = !isMenuOpen"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+      </svg>
+    </button>
+
+    <!-- Regular Menu (hidden on small screens) -->
+    <div class="hidden md:flex space-x-4">
       <a
         [routerLink]="['']"
         routerLinkActive="underline"
@@ -25,4 +47,44 @@
       >
     </div>
   </div>
+
+  <!-- Mobile Menu Backdrop -->
+<div
+  class="fixed inset-0 z-40 md:hidden transition-opacity duration-300"
+  [ngClass]="{ 'opacity-100 pointer-events-auto bg-black/50': isMenuOpen, 'opacity-0 pointer-events-none': !isMenuOpen }"
+  (click)="isMenuOpen = false"
+>
+  <!-- Slide-in Panel -->
+  <div
+    class="absolute right-0 top-0 h-full w-64 bg-blue-700 shadow-lg transition-transform duration-300 ease-in-out"
+    [ngClass]="{
+      'translate-x-0': isMenuOpen,
+      'translate-x-full': !isMenuOpen
+    }"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="flex flex-col space-y-4 p-6">
+      <a
+        [routerLink]="['']"
+        routerLinkActive="underline"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:underline"
+        >Home</a
+      >
+      <a
+        [routerLink]="['/inventory']"
+        routerLinkActive="underline"
+        class="hover:underline"
+        >Inventory</a
+      >
+      <a
+        [routerLink]="['/add-product']"
+        routerLinkActive="underline"
+        class="hover:underline"
+        >Add Product</a
+      >
+    </div>
+  </div>
+</div>
+
 </nav>

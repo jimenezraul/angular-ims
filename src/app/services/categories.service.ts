@@ -14,7 +14,6 @@ export class CategoryService extends HttpService {
 
   constructor(http: HttpClient) {
     super(http);
-    this.loadCategories();
   }
 
   loadCategories() {
