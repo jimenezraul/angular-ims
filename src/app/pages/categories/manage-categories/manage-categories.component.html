@@ -1,4 +1,4 @@
-<div class="max-w-2xl mx-auto p-6 bg-white shadow rounded">
+<div class="max-w-2xl mx-auto p-6 bg-white shadow rounded-2xl">
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-2xl font-bold">Edit Category</h2>
     <a
@@ -15,7 +15,7 @@
   <select
     id="categorySelect"
     (change)="onSelectCategory($event)"
-    class="mb-6 w-full p-2 border rounded"
+    class="mb-6 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
   >
     <option value="">-- Choose Category --</option>
     <option *ngFor="let cat of categoriesList" [value]="cat.id">
@@ -33,7 +33,7 @@
       <input
         type="text"
         formControlName="name"
-        class="w-full p-2 border rounded"
+        class="w-full p-2 border border-gray-300 rounded-lg shadow-sm"
       />
     </div>
 
@@ -42,7 +42,7 @@
       <textarea
         formControlName="description"
         rows="3"
-        class="w-full p-2 border rounded"
+        class="w-full p-2 border border-gray-300 rounded-lg shadow-sm"
       ></textarea>
     </div>
 

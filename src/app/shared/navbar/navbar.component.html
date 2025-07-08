@@ -65,35 +65,53 @@
     }"
     (click)="isMenuOpen = false"
   >
-    <!-- Mobile Menu -->
-    <div class="flex flex-col space-y-4 p-6">
-      <a
-        [routerLink]="['']"
-        routerLinkActive="underline"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="hover:underline"
-        >Home</a
-      >
-      <a
-        [routerLink]="['/inventory']"
-        routerLinkActive="underline"
-        class="hover:underline"
-        >Inventory</a
-      >
-      <a
-        [routerLink]="['/manage-categories']"
-        routerLinkActive="underline"
-        class="hover:underline"
-      >
-        Categories
-      </a>
+    <!-- Slide-in Panel -->
+    <div
+      class="absolute right-0 top-0 h-full w-64 bg-blue-700 shadow-lg transition-transform duration-300 ease-in-out"
+      [ngClass]="{
+        'translate-x-0': isMenuOpen,
+        'translate-x-full': !isMenuOpen
+      }"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex flex-col space-y-4 p-6">
+        <a
+          [routerLink]="['']"
+          routerLinkActive="underline"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="hover:underline"
+          (click)="isMenuOpen = false"
+        >
+          Home
+        </a>
 
-      <a
-        [routerLink]="['/add-product']"
-        routerLinkActive="underline"
-        class="hover:underline"
-        >Add Product</a
-      >
+        <a
+          [routerLink]="['/inventory']"
+          routerLinkActive="underline"
+          class="hover:underline"
+          (click)="isMenuOpen = false"
+        >
+          Inventory
+        </a>
+
+        <a
+          [routerLink]="['/manage-categories']"
+          routerLinkActive="underline"
+          class="hover:underline"
+          (click)="isMenuOpen = false"
+        >
+          Categories
+        </a>
+
+        <a
+          [routerLink]="['/add-product']"
+          routerLinkActive="underline"
+          class="hover:underline"
+          (click)="isMenuOpen = false"
+        >
+          Add Product
+        </a>
+      </div>
     </div>
   </div>
 </nav>

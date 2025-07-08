@@ -7,8 +7,8 @@ import {
   Validators,
   FormsModule,
 } from '@angular/forms';
-import { ProductService } from '../../services/product.service';
-import { CategoryService } from '../../services/categories.service';
+import { ProductService } from '../../../services/product.service';
+import { CategoryService } from '../../../services/categories.service';
 import { Router } from '@angular/router';
 
 @Component({

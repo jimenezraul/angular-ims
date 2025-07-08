@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CategoryService } from '../../services/categories.service';
+import { CategoryService } from '../../../services/categories.service';
 import { Router } from '@angular/router';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CategoryService } from '../../services/categories.service';
-import { Category } from '../../models/category';
+import { CategoryService } from '../../../services/categories.service';
+import { Category } from '../../../models/category';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 

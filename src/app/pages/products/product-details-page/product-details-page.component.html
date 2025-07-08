@@ -37,16 +37,16 @@
           {{ product.description }}
         </p>
 
-        <div class="overflow-x-auto mb-8">
+        <div class="overflow-x-auto mb-8 border-2 border-gray-200 rounded-xl shadow-sm">
           <table
             class="w-full text-left text-gray-700 rounded-xl overflow-hidden"
           >
-            <tbody class="divide-y divide-gray-200">
+            <tbody class="divide-y divide-gray-300">
               <tr
                 class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
               >
                 <th
-                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                  class="py-3 px-4 font-semibold bg-gray-100 text-sm uppercase tracking-wider w-1/4"
                 >
                   SKU
                 </th>
@@ -58,7 +58,7 @@
                 class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
               >
                 <th
-                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                  class="py-3 px-4 font-semibold bg-gray-100 text-sm uppercase tracking-wider w-1/4"
                 >
                   Quantity
                 </th>
@@ -80,7 +80,7 @@
                 class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
               >
                 <th
-                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                  class="py-3 px-4 font-semibold bg-gray-100 text-sm uppercase tracking-wider w-1/4"
                 >
                   Price
                 </th>
@@ -92,7 +92,7 @@
                 class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
               >
                 <th
-                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                  class="py-3 px-4 font-semibold bg-gray-100 text-sm uppercase tracking-wider w-1/4"
                 >
                   Category
                 </th>
@@ -104,12 +104,27 @@
                 class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
               >
                 <th
-                  class="py-3 px-4 font-semibold bg-gray-50 text-sm uppercase tracking-wider w-1/4"
+                  class="py-3 px-4 font-semibold bg-gray-100 text-sm uppercase tracking-wider w-1/4"
                 >
                   Location
                 </th>
                 <td class="py-3 px-4 text-base capitalize">
                   {{ product.location }}
+                </td>
+              </tr>
+              <tr
+                class="hover:bg-gray-50 transition-colors duration-150 ease-in-out"
+              >
+                <th
+                  class="py-3 px-4 font-semibold bg-gray-100 text-sm uppercase tracking-wider w-1/4"
+                >
+                  Total Value
+                </th>
+                <td class="py-3 px-4 text-base font-medium text-green-800">
+                  ${{
+                    (product.quantity || 0) * (product.price || 0)
+                      | number : "1.2-2"
+                  }}
                 </td>
               </tr>
             </tbody>

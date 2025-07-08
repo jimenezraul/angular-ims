@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { InventoryPageComponent } from './pages/inventory-page/inventory-page.component';
-import { ProductDetailsPageComponent } from './pages/product-details-page/product-details-page.component';
-import { AddProductPageComponent } from './pages/add-product-page/add-product-page.component';
-import { EditProductPageComponent } from './pages/edit-product-page/edit-product-page.component';
-import { AddCategoryComponent } from './pages/add-category/add-category.component';
-import { ManageCategoryComponent } from './pages/manage-categories/manage-categories.component';
+import { ProductDetailsPageComponent } from './pages/products/product-details-page/product-details-page.component';
+import { AddProductPageComponent } from './pages/products/add-product-page/add-product-page.component';
+import { EditProductPageComponent } from './pages/products/edit-product-page/edit-product-page.component';
+import { AddCategoryComponent } from './pages/categories/add-category/add-category.component';
+import { ManageCategoryComponent } from './pages/categories/manage-categories/manage-categories.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },

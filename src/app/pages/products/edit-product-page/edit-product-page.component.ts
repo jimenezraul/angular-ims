@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService } from '../../services/product.service';
+import { ProductService } from '../../../services/product.service';
 import {
   FormGroup,
   FormControl,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CategoryService } from '../../services/categories.service';
-import { Category } from '../../models/category';
+import { CategoryService } from '../../../services/categories.service';
+import { Category } from '../../../models/category';
 
 @Component({
   selector: 'app-edit-product-page',
