@@ -1,9 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, computed, signal, effect, inject } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-inventory-page',
@@ -11,41 +11,31 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './inventory-page.component.html',
 })
-export class InventoryPageComponent implements OnInit {
+export class InventoryPageComponent {
   searchTerm = signal('');
   selectedCategory = signal('');
 
-  constructor(private productService: ProductService) {}
-  
-  ngOnInit(): void {
+  private productService = inject(ProductService);
+  private categoriesService = inject(CategoriesService)
+
+  constructor() {
+    effect(() => {
+      const term = this.searchTerm().trim();
+
+      if (term.length > 0) {
+        this.productService.searchProducts(term);
+      } else {
+        this.loadCurrentPage();
+      }
+    });
+  }
+
+  private loadCurrentPage() {
     this.productService.loadProductsByPage(this.currentPage);
   }
 
-  get categories() {
-    return this.productService.categories();
-  }
-
-  filteredProducts = computed(() => {
-    const products = this.productService.products().data || [];
-
-    const term = this.searchTerm().toLowerCase();
-    const categoryFilter = this.selectedCategory();
-
-    return products.filter((p) => {
-      const matchesTerm =
-        p.name.toLowerCase().includes(term) ||
-        p.sku.toLowerCase().includes(term);
-
-      const matchesCategory = categoryFilter
-        ? p.category === categoryFilter
-        : true;
-
-      return matchesTerm && matchesCategory;
-    });
-  });
-
-  goToPage(page: number) {
-    this.productService.loadProductsByPage(page);
+  get productsList() {
+    return this.productService.products().data || [];
   }
 
   get currentPage() {
@@ -54,5 +44,13 @@ export class InventoryPageComponent implements OnInit {
 
   get totalPages() {
     return this.productService.totalPages();
+  }
+
+  get categories() {
+    return this.categoriesService.categories().data || [];
+  }
+
+  goToPage(page: number) {
+    this.productService.loadProductsByPage(page);
   }
 }
