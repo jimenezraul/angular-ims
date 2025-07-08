@@ -29,6 +29,7 @@ export class EditProductPageComponent {
     private categoryService: CategoryService,
     private router: Router
   ) {
+    this.categoryService.loadCategories();
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.productId = id;
 

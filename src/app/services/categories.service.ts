@@ -1,6 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CategoryResponse } from '../models/category';
+import { Category, CategoryResponse } from '../models/category';
 import { HttpService } from './httpService';
 
 @Injectable({
@@ -21,5 +21,21 @@ export class CategoryService extends HttpService {
       next: (data) => this._categories.set(data),
       error: (err) => console.error('Failed to load categories', err),
     });
+  }
+
+  findOne(id: number) {
+    return this.http.get<Category>(`${this.categoriesUrl}/${id}`);
+  }
+
+  createCategory(category: Category) {
+    return this.http.post(`${this.apiUrl}/categories`, category);
+  }
+
+  update(id: number, data: Partial<Category>) {
+    return this.http.put<Category>(`${this.apiUrl}/categories/${id}`, data);
+  }
+
+  remove(id: number) {
+    return this.http.delete(`${this.apiUrl}/categories/${id}`);
   }
 }

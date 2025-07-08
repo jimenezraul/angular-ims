@@ -40,6 +40,14 @@
         >Inventory</a
       >
       <a
+        [routerLink]="['/manage-categories']"
+        routerLinkActive="underline"
+        class="hover:underline"
+      >
+        Categories
+      </a>
+
+      <a
         [routerLink]="['/add-product']"
         routerLinkActive="underline"
         class="hover:underline"
@@ -49,20 +57,15 @@
   </div>
 
   <!-- Mobile Menu Backdrop -->
-<div
-  class="fixed inset-0 z-40 md:hidden transition-opacity duration-300"
-  [ngClass]="{ 'opacity-100 pointer-events-auto bg-black/50': isMenuOpen, 'opacity-0 pointer-events-none': !isMenuOpen }"
-  (click)="isMenuOpen = false"
->
-  <!-- Slide-in Panel -->
   <div
-    class="absolute right-0 top-0 h-full w-64 bg-blue-700 shadow-lg transition-transform duration-300 ease-in-out"
+    class="fixed inset-0 z-40 md:hidden transition-opacity duration-300"
     [ngClass]="{
-      'translate-x-0': isMenuOpen,
-      'translate-x-full': !isMenuOpen
+      'opacity-100 pointer-events-auto bg-black/50': isMenuOpen,
+      'opacity-0 pointer-events-none': !isMenuOpen
     }"
-    (click)="$event.stopPropagation()"
+    (click)="isMenuOpen = false"
   >
+    <!-- Mobile Menu -->
     <div class="flex flex-col space-y-4 p-6">
       <a
         [routerLink]="['']"
@@ -78,6 +81,14 @@
         >Inventory</a
       >
       <a
+        [routerLink]="['/manage-categories']"
+        routerLinkActive="underline"
+        class="hover:underline"
+      >
+        Categories
+      </a>
+
+      <a
         [routerLink]="['/add-product']"
         routerLinkActive="underline"
         class="hover:underline"
@@ -85,6 +96,4 @@
       >
     </div>
   </div>
-</div>
-
 </nav>

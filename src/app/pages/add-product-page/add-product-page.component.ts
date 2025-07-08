@@ -45,6 +45,7 @@ export class AddProductPageComponent {
       ]),
       category: new FormControl('', [Validators.required]),
     });
+    this.categoriesService.loadCategories();
   }
 
   get name() {
@@ -75,23 +76,22 @@ export class AddProductPageComponent {
   }
 
   onSubmit() {
-  if (this.productForm.valid) {
-    const formValue = { ...this.productForm.value };
+    if (this.productForm.valid) {
+      const formValue = { ...this.productForm.value };
 
-    formValue.categoryId = Number(formValue.category);
-    delete formValue.category;
+      formValue.categoryId = Number(formValue.category);
+      delete formValue.category;
 
-    this.productService.createProduct(formValue).subscribe({
-      next: () => {
-        alert('Product added successfully!');
-        this.router.navigate(['/inventory']);
-      },
-      error: (err) => {
-        console.error('Failed to add product', err);
-        alert('Failed to add product');
-      },
-    });
+      this.productService.createProduct(formValue).subscribe({
+        next: () => {
+          alert('Product added successfully!');
+          this.router.navigate(['/inventory']);
+        },
+        error: (err) => {
+          console.error('Failed to add product', err);
+          alert('Failed to add product');
+        },
+      });
+    }
   }
-}
-
 }

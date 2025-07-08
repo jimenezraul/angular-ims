@@ -4,12 +4,19 @@ import { InventoryPageComponent } from './pages/inventory-page/inventory-page.co
 import { ProductDetailsPageComponent } from './pages/product-details-page/product-details-page.component';
 import { AddProductPageComponent } from './pages/add-product-page/add-product-page.component';
 import { EditProductPageComponent } from './pages/edit-product-page/edit-product-page.component';
+import { AddCategoryComponent } from './pages/add-category/add-category.component';
+import { ManageCategoryComponent } from './pages/manage-categories/manage-categories.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'inventory', component: InventoryPageComponent },
   { path: 'product/:id', component: ProductDetailsPageComponent },
   { path: 'add-product', component: AddProductPageComponent },
+  { path: 'add-category', component: AddCategoryComponent },
+  {
+    path: 'manage-categories',
+    component: ManageCategoryComponent,
+  },
   { path: 'edit-product/:id', component: EditProductPageComponent },
   { path: '**', redirectTo: '' },
 ];

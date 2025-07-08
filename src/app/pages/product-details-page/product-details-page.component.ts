@@ -2,14 +2,15 @@ import { Component, signal, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
-import { Product, ProductDto } from '../../models/product';
+import { Product } from '../../models/product';
 import { CategoryService } from '../../services/categories.service';
 import { Category } from '../../models/category';
+import { LoadingComponent } from '../../shared/loading/loading.component';
 
 @Component({
   selector: 'app-product-details-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, LoadingComponent],
   templateUrl: './product-details-page.component.html',
 })
 export class ProductDetailsPageComponent implements OnInit {
