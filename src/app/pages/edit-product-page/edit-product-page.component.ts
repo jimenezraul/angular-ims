@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
@@ -8,6 +8,8 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { CategoryService } from '../../services/categories.service';
+import { Category } from '../../models/category';
 
 @Component({
   selector: 'app-edit-product-page',
@@ -19,17 +21,20 @@ export class EditProductPageComponent {
   productForm!: FormGroup;
   productFound = true;
   productId!: number;
+  categories: Category[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
+    private categoryService: CategoryService,
     private router: Router
-  ) {}
-
-  ngOnInit() {
+  ) {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.productId = id;
+
     this.productService.getProductById(id).subscribe((product) => {
+      this.categories = this.categoryService.categories().data || [];
+
       if (!product) {
         this.productFound = false;
         return;
@@ -52,10 +57,7 @@ export class EditProductPageComponent {
           Validators.required,
           Validators.min(0),
         ]),
-        category: new FormControl(product.category, [
-          Validators.required,
-          Validators.minLength(3),
-        ]),
+        categoryId: new FormControl(product.categoryId, [Validators.required]),
         description: new FormControl(product.description, [
           Validators.required,
           Validators.minLength(10),
@@ -80,8 +82,8 @@ export class EditProductPageComponent {
   get price() {
     return this.productForm.get('price')!;
   }
-  get category() {
-    return this.productForm.get('category')!;
+  get categoryId() {
+    return this.productForm.get('categoryId')!;
   }
   get description() {
     return this.productForm.get('description')!;

@@ -2,7 +2,8 @@ import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product';
+import { ProductDto } from '../../models/product';
+import { CategoryService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-product-details-page',
@@ -10,19 +11,28 @@ import { Product } from '../../models/product';
   imports: [CommonModule, RouterLink],
   templateUrl: './product-details-page.component.html',
 })
-export class ProductDetailsPageComponent implements OnInit {
-  product = signal<Product | null>(null);
+export class ProductDetailsPageComponent {
+  product = signal<ProductDto | null>(null);
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
+    private categoryService: CategoryService,
     private router: Router
-  ) {}
-
-  ngOnInit() {
+  ) {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.productService.getProductById(id).subscribe({
-      next: (prod) => this.product.set(prod),
+      next: (prod) => {
+        const categories = this.categoryService.categories().data || [];
+        const category = categories.find((c) => c.id === prod.categoryId);
+
+        const productWithCategory = {
+          ...prod,
+          categoryName: category?.name || 'Unknown',
+        };
+
+        this.product.set(productWithCategory);
+      },
       error: () => this.product.set(null),
     });
   }

@@ -1,9 +1,9 @@
-import { Component, computed, signal, effect, inject } from '@angular/core';
+import { Component, signal, effect } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoryService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-inventory-page',
@@ -15,15 +15,32 @@ export class InventoryPageComponent {
   searchTerm = signal('');
   selectedCategory = signal('');
 
-  private productService = inject(ProductService);
-  private categoriesService = inject(CategoriesService)
-
-  constructor() {
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {
     effect(() => {
       const term = this.searchTerm().trim();
-
       if (term.length > 0) {
+        this.selectedCategory.set('');
+      }
+    });
+
+    effect(() => {
+      const categoryId = this.selectedCategory().trim();
+      if (categoryId) {
+        this.searchTerm.set('');
+      }
+    });
+
+    effect(() => {
+      const term = this.searchTerm().trim();
+      const categoryId = this.selectedCategory().trim();
+
+      if (term.length > 0 && !categoryId) {
         this.productService.searchProducts(term);
+      } else if (categoryId) {
+        this.productService.searchProducts('', parseInt(categoryId));
       } else {
         this.loadCurrentPage();
       }
@@ -35,7 +52,15 @@ export class InventoryPageComponent {
   }
 
   get productsList() {
-    return this.productService.products().data || [];
+    const categories = this.categoryService.categories().data || [];
+
+    return (this.productService.products().data || []).map((product) => {
+      const category = categories.find((c) => c.id === product.categoryId);
+      return {
+        ...product,
+        categoryName: category?.name || 'Unknown',
+      };
+    });
   }
 
   get currentPage() {
@@ -47,7 +72,7 @@ export class InventoryPageComponent {
   }
 
   get categories() {
-    return this.categoriesService.categories().data || [];
+    return this.categoryService.categories().data || [];
   }
 
   goToPage(page: number) {

@@ -60,85 +60,91 @@
     </div>
   </div>
 
-  <div
-    *ngIf="productsList.length === 0"
-    class="text-center text-gray-600 py-12 text-lg bg-white rounded-lg shadow-md"
-  >
-    <p class="mb-4">No products found matching your criteria.</p>
-    <svg
-      class="mx-auto h-16 w-16 text-gray-400"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-hidden="true"
+  <ng-container *ngIf="productsList.length === 0; else productTable">
+    <div
+      class="text-center text-gray-600 py-12 text-lg bg-white rounded-lg shadow-md"
     >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  </div>
+      <p class="mb-4">No products found matching your criteria.</p>
+      <svg
+        class="mx-auto h-16 w-16 text-gray-400"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    </div>
+  </ng-container>
 
-  <!-- Inventory Table -->
-  <div class="overflow-x-auto">
-    <table class="w-full border border-[#cedbe8] rounded-lg bg-white">
-      <thead>
-        <tr class="bg-slate-50">
-          <th class="text-left px-4 py-3 text-sm font-medium">Product Name</th>
-          <th class="text-left px-4 py-3 text-sm font-medium">SKU</th>
-          <th class="text-left px-4 py-3 text-sm font-medium">Category</th>
-          <th class="text-left px-4 py-3 text-sm font-medium">Stock</th>
-          <th class="text-left px-4 py-3 text-sm font-medium">Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let product of productsList"
-          class="border-t border-[#cedbe8] hover:bg-slate-50"
-        >
-          <td class="px-4 py-2 text-sm font-medium text-gray-700">
-            <a
-              [routerLink]="['/product', product.id]"
-              class="text-blue-600 hover:underline"
-            >
-              {{ product.name }}
-            </a>
-          </td>
-          <td class="px-4 py-2 text-sm text-[#49739c]">
-            {{ product.sku }}
-          </td>
-          <td class="px-4 py-2 text-sm text-[#49739c]">
-            {{ product.category }}
-          </td>
-          <td class="px-4 py-2 text-sm text-[#49739c]">
-            {{ product.quantity }}
-          </td>
-          <td class="px-4 py-2 text-sm text-[#49739c]">${{ product.price }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <ng-template #productTable>
+    <!-- Inventory Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full border border-[#cedbe8] rounded-lg bg-white">
+        <thead>
+          <tr class="bg-slate-50">
+            <th class="text-left px-4 py-3 text-sm font-medium">
+              Product Name
+            </th>
+            <th class="text-left px-4 py-3 text-sm font-medium">SKU</th>
+            <th class="text-left px-4 py-3 text-sm font-medium">Category</th>
+            <th class="text-left px-4 py-3 text-sm font-medium">Stock</th>
+            <th class="text-left px-4 py-3 text-sm font-medium">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let product of productsList"
+            class="border-t border-[#cedbe8] hover:bg-slate-50"
+          >
+            <td class="px-4 py-2 text-sm font-medium text-gray-700">
+              <a
+                [routerLink]="['/product', product.id]"
+                class="text-blue-600 hover:underline"
+              >
+                {{ product.name }}
+              </a>
+            </td>
+            <td class="px-4 py-2 text-sm text-[#49739c]">{{ product.sku }}</td>
+            <td class="px-4 py-2 text-sm text-[#49739c]">
+              {{ product.categoryName }}
+            </td>
+            <td class="px-4 py-2 text-sm text-[#49739c]">
+              {{ product.quantity }}
+            </td>
+            <td class="px-4 py-2 text-sm text-[#49739c]">
+              {{ product.price | currency }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="flex justify-center items-center mt-8 gap-2">
-    <button
-      (click)="goToPage(currentPage - 1)"
-      [disabled]="currentPage === 1"
-      class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-200"
-    >
-      Previous
-    </button>
+    <!-- Pagination -->
+    <div class="flex justify-center items-center mt-8 gap-2">
+      <button
+        (click)="goToPage(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-200"
+      >
+        Previous
+      </button>
 
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
 
-    <button
-      (click)="goToPage(currentPage + 1)"
-      [disabled]="currentPage === totalPages"
-      class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-200"
-    >
-      Next
-    </button>
-  </div>
+      <button
+        (click)="goToPage(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-200"
+      >
+        Next
+      </button>
+    </div>
+  </ng-template>
 </main>

@@ -8,6 +8,7 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
+import { CategoryService } from '../../services/categories.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,7 +20,11 @@ import { Router } from '@angular/router';
 export class AddProductPageComponent {
   productForm!: FormGroup;
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private categoriesService: CategoryService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.productForm = new FormGroup({
@@ -30,10 +35,6 @@ export class AddProductPageComponent {
       ]),
       quantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       price: new FormControl(0, [Validators.required, Validators.min(0)]),
-      category: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-      ]),
       description: new FormControl('', [
         Validators.required,
         Validators.minLength(10),
@@ -41,7 +42,8 @@ export class AddProductPageComponent {
       location: new FormControl('', [
         Validators.required,
         Validators.minLength(2),
-      ]), // ✅ add location
+      ]),
+      category: new FormControl('', [Validators.required]),
     });
   }
 
@@ -57,8 +59,13 @@ export class AddProductPageComponent {
   get price() {
     return this.productForm.get('price')!;
   }
+
+  get categoryControl() {
+    return this.productForm.get('category');
+  }
+
   get category() {
-    return this.productForm.get('category')!;
+    return this.categoriesService.categories().data || [];
   }
   get description() {
     return this.productForm.get('description')!;
@@ -68,17 +75,23 @@ export class AddProductPageComponent {
   }
 
   onSubmit() {
-    if (this.productForm.valid) {
-      this.productService.createProduct(this.productForm.value).subscribe({
-        next: () => {
-          alert('Product added successfully!');
-          this.router.navigate(['/inventory']);
-        },
-        error: (err) => {
-          console.error('Failed to add product', err);
-          alert('Failed to add product');
-        },
-      });
-    }
+  if (this.productForm.valid) {
+    const formValue = { ...this.productForm.value };
+
+    formValue.categoryId = Number(formValue.category);
+    delete formValue.category;
+
+    this.productService.createProduct(formValue).subscribe({
+      next: () => {
+        alert('Product added successfully!');
+        this.router.navigate(['/inventory']);
+      },
+      error: (err) => {
+        console.error('Failed to add product', err);
+        alert('Failed to add product');
+      },
+    });
   }
+}
+
 }
