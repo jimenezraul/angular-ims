@@ -111,6 +111,6 @@ export class EditProductPageComponent {
   }
 
   goBack() {
-    this.router.navigate(['/inventory']);
+    this.router.navigate([`/product/${this.productId}`]);
   }
 }

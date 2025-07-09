@@ -39,7 +39,7 @@ export class AddCategoryComponent implements OnInit {
       this.categoryService.createCategory(this.categoryForm.value).subscribe({
         next: () => {
           alert('Category added successfully!');
-          this.router.navigate(['/inventory']); // Adjust redirect if needed
+          this.router.navigate(['/manage-categories']); // Adjust redirect if needed
         },
         error: () => {
           alert('Failed to add category');
